@@ -1,0 +1,22 @@
+
+Questions to answer :
+
+
+1.	Conduct univariate and bivariate analysis of the data. 
+	2. Complete the following table:
+      Model     Terms in Model			-2ln L
+	Constant only (unadjusted)			
+	Years 	
+	Years Mixed
+	Years Mixed Married 
+	Years Mixed Married Kids
+	Year  Mixed  Married Heduc  
+	Year Mixed  Married  Heduc Mixed*Married
+
+	3. What is the odds ratio of divorce for couples who were previously married and married to someone with different 			race   (married*mixed)? 95% CI? Write the interpretation.
+	4. What is the odds ratio of staying married for couples who are married for 10 years and who do not have kids? 95% CI?          Write the interpretation.
+5.  Consider a model with ONLY HEDUC  DEBT and YEARS as predictors of divorce. What is the odds of divorce for those couples      in which husbands have less than 13 years of education, have debts and are married for only 2 years? 
+	6. whatis the probability that a husband with 16 or more years of education and who has been married before stay married?
+	
+	7. Report your final model (this should include at least ONE statistical significant interaction). Write the logit       regression model as well as the fitted model. Report and interpret the odds ratios and 95%CI for each predictor of your final model. 
+8.	Who’s at the lowest probability of staying married?

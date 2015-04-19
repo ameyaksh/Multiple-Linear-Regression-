@@ -1,0 +1,235 @@
+SAS Code: 
+
+libname homework  '\\Client\E$\ASu\Applied Regression Models\homework2';
+
+proc contents data = homework._all_; /*gives a list of all the datasets in the specified library. In this case it is homework*/
+run;
+proc print data = homework.divorce2; /* prints the data from the divorce2 file*/
+title ' original divorce2 file';
+run;
+data new;
+set homework.divorce2;
+/*newvar= 'divorce2i';*/
+run;
+data work.new;
+ set work.new; *writing over the data;
+  he1 = .; *create a new variable with missing values;
+  if heduc = 0 then he1 = 1; *then replace accordingly;
+  else he1 = 0;
+  he2 = .;
+  if heduc = 1 then he2 = 1;
+  else he2 = 0; 
+  run;
+proc print data=work.new;/* "prints the data from the duplicate file which is divorce2i"*/
+  title 'After copying the file and creating NEWVAR';
+run;
+
+proc univariate data=work.new;/* as years is a quantitative varible we run the proc univariate procedure and we get the central tendencies measures*/
+var years;
+run;
+
+proc freq data = work.new data = order; /* for a categorical variable, the univariate procedure is equal to proc freq */
+tables heduc mixed div married debt kids infidelity;
+title ' frequencies for all the categorical variables' ;
+run;
+
+proc freq data = work.new data = order; /* bivariate analysis of divorce and eduaction of the husband */
+tables div*heduc/nopct nocol expected chisq;
+run;
+proc freq data = work.new data = order;/* bivariate analysis of divorce and earlier marriage */
+tables div*married/ nopct nocol expected chisq;
+run;
+proc freq data = work.new data = order;/* bivariate analysis of divorce and debt */
+tables div*debt/nopct nocol expected chisq;
+run;
+proc freq data = work.new;/* bivariate analysis of divorce and kids */
+tables div*kids/nopct nocol expected chisq;
+run;
+proc freq data = work.new data = order; /* bivariate analysis of divorce and infidelity */
+tables infidelity*div/ nopct nocol expected chisq;
+run;
+
+proc freq data = work.new data = order; /* bivariate analysis of divorce and mixed*/
+tables div*mixed/ nopct nocol expected chisq;
+run;
+
+proc freq data = work.new data = order; /* bivariate analysis of divorce and years */
+tables div*years/ nopct nocol expected chisq fisher ;/* fisher is not working */ 
+run;
+
+proc logistic data = work.new ;
+model div = ;
+run;
+quit;
+
+proc logistic data = work.new ;
+model div = years ;
+run;
+
+proc logistic data = work.new ;
+model div = years mixed ;
+run;
+proc logistic data = work.new ;
+model div = years mixed married;
+run;
+proc logistic data = work.new ;
+model div = years mixed married  kids;
+run;
+
+proc logistic data = work.new ;
+model div = years mixed married heduc mixed*married;
+run;
+proc logistic data = work.new descending;
+model div =married mixed  married|mixed / scale = none aggregate covb ;
+run;
+
+
+
+
+proc logistic data = work.new  descending;*means that y = 1 is the outcome;
+class work.new;
+model div = mixed*married; 
+output out=estimated predicted=estprob l=lower95 u=upper95;
+ run; quit;
+
+ /* question 5 */
+ proc logistic data = work.new ;
+model div = years kids / scale = none aggregate covb ;
+run;
+
+ 
+/* question 6 */
+
+*changing variables to dummy;
+data work.new;
+ set work.new; *writing over the data;
+  he1 = .; *create a new variable with missing values;
+  if heduc = 0 then he1 = 1; *then replace accordingly;
+  else he1 = 0;
+  he2 = .;
+  if heduc = 1 then he2 = 1;
+  else he2 = 0; 
+  run;
+
+  proc print data = work.new;
+  run;
+
+  proc logistic data= work.new descending ;
+  model div =he1 he2 debt years/ scale = none aggregate covb;
+  run;
+/* question 7 */ 
+proc logistic data = work.new;
+model div= he1 he2 married;
+run;
+/* question 8 */
+proc logistic data = work.new;
+model div= years mixed/ scale = none aggregate ;
+run;
+
+proc logistic data = work.new descending;/*1*/
+model div= years mixed married / scale = none aggregate ;
+run;
+
+proc logistic data = work.new descending;/*2*/
+model div= years mixed married mixed*married  / scale = none aggregate ;
+run;
+proc logistic data = work.new descending;/*3*/
+model div= years mixed married mixed*married he1 he2 / scale = none aggregate ;
+run;
+proc logistic data = work.new descending;/*4*/
+model div= years mixed married mixed*married he1 he2 debt  / scale = none aggregate ;
+run;
+proc logistic data = work.new;/*5*/
+model div= years mixed married mixed*married he1 he2 debt  he1*debt he2*debt / scale = none aggregate ;
+run;
+proc logistic data = work.new;
+model div= years mixed married he1 he2 / scale = none aggregate ;
+run;
+
+proc logistic data = work.new;
+model div= years mixed married infidelity  / scale = none aggregate ;
+run;
+proc logistic data = work.new;
+model div= years mixed married infidelity*years  / scale = none aggregate ;
+run;
+proc logistic data = work.new;
+model div= years mixed married heduc debt heduc*debt / scale = none aggregate ;
+run;
+
+
+proc logistic data = work.new descending ;
+model div= years mixed married infidelity debt kids he1 he2/ selection = stepwise sle=0.15 sls =0.1  ;
+run;
+
+proc logistic data = work.new; /* these predictors are what we get from the stepwise regression__ question 9  */
+model div= years mixed married mixed*married heduc debt  / scale = none aggregate ;
+run;
+
+proc logistic data = work.new;
+model div= years mixed married mixed*married   / scale = none aggregate ;
+run;
+
+proc logistic data = work.new descending; /* these predictors are what we get from the stepwise regression__ question 9  */
+model div= years mixed married mixed*married heduc debt  /  clodds = pl;
+run;
+
+/* quetion 10 */
+proc logistic data = work.new descending ;
+model div = years mixed married he1 he2 mixed*married;
+output out = pred pred = prob;
+run;
+ proc sort data = pred;
+ by prob;
+ run;
+
+ proc print data = pred;
+ var years mixed married he1 he2 div prob;
+ run;
+
+proc logistic data = work.new descending ;
+model div= years mixed married mixed*married debt kids he1 he2/ selection = stepwise sle=0.10 sls =0.1  ;
+run;
+/* question 10 */ 
+proc logistic data = work.new descending ;
+model div= years mixed married mixed*married debt he1 he2 he1*debt he2*debt  /scale = none aggregate covb  ;
+run;
+
+proc print data = homework.divorce2;
+run;
+
+proc logistic data = homework.divorce2 ;
+model div= years mixed married  debt kids heduc infidelity / selection = stepwise sle=0.15 sls =0.1  ;
+run;
+proc logistic data = homework.divorce2 descending ;
+model div= years mixed married mixed*married debt  heduc*debt   /scale = none aggregate ;
+run;
+
+proc logistic data = homework.divorce2 descending ;
+model div= years mixed married mixed*married debt  heduc*debt   /scale = none aggregate  ;
+run;
+
+proc logistic data = work.new descending ;
+model div= years mixed married mixed*married debt  he1 he2/ scale = none aggregate  ;
+run;
+
+proc logistic data = work.new descending; /*4*/
+model div= years mixed married mixed*married he1 he2 debt  / scale = none aggregate covb  ;
+run;
+
+/* question 10 */
+proc logistic data = work.new descending    ;
+model div = years mixed married mixed*married he1 he2 debt;
+output out = pred pred = prob;
+run;
+ proc sort data = pred;
+ by prob;
+ run;
+
+ proc print data = pred;
+ var years mixed married  he1 he2 debt  prob;
+ run;
+
+
+/* question 10 */ 
+
+

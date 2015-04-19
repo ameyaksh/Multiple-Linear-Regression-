@@ -37,9 +37,7 @@ Questions to answer :
 	Year  Mixed  Married Heduc  
 	Year Mixed  Married  Heduc Mixed*Married
 
-
-				
-	3. What is the odds ratio of divorce for couples who were previously married and married to someone with different race         (married*mixed)? 95% CI? Write the interpretation.
+	3. What is the odds ratio of divorce for couples who were previously married and married to someone with different 			race   (married*mixed)? 95% CI? Write the interpretation.
 	4. What is the odds ratio of staying married for couples who are married for 10 years and who do not have kids? 95% CI?          Write the interpretation.
 5.  Consider a model with ONLY HEDUC  DEBT and YEARS as predictors of divorce. What is the odds of divorce for those couples      in which husbands have less than 13 years of education, have debts and are married for only 2 years? 
 	6. whatis the probability that a husband with 16 or more years of education and who has been married before stay married?

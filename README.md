@@ -1,4 +1,4 @@
-# Multiple-Linear-Regression-
+# Logistic-Regression-
 Predicting whether couples would opt for dissolution of marriage by using a logistic regression model
 
 This was one of the case study to work on for the course ECN 525 : Applied Regression Models 
